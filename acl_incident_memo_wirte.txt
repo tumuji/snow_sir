@@ -1,0 +1,13 @@
+//一般ユーザーについては新規作成、Tier2については、新規作成及びインシデントの担当グループである場合だけ、Tier1はいつでもtrueとする。
+//これは既存レコードについては、一般ユーザーについては閲覧可能なmemoフィールドだけに書き込み権を与えるACLと組み合わせて設定する。
+
+var g = gs.getUser().isMemberOf(current.assignment_group.toString());
+var r = gs.hasRole("x_661859_ir_test.admin, x_661859_ir_test.user");
+var n = current.isNewRecord();
+
+//最後に全部の要素で判定。
+if(g || r || n){
+	answer = true;
+} else{
+    answer = false;	
+}

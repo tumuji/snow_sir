@@ -1,0 +1,10 @@
+//Tier2については、インシデントの担当グループである場合だけ、Tier1はいつでもtrueとする。
+var g = gs.getUser().isMemberOf(current.assignment_group.toString());
+var r = gs.hasRole("x_yyyy.admin, x_yyyy.user");
+
+//最後に全部の要素で判定。
+if(g || r){
+	answer = true;
+} else{
+    answer = false;	
+}

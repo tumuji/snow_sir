@@ -1,0 +1,27 @@
+//一般ユーザーについては、親インシデントのwatchlistに入っているときだけ、Tier2については、親インシデントの担当グループである場合だけ、Tier1はいつでもtrueとする。
+var u = gs.getUserID(); //sets u to ID of current user
+var m = gs.getUser().getEmail();
+var g = gs.getUser().isMemberOf(current.parent_incident.assignment_group.toString());
+var r = gs.hasRole("x_yyyy.admin, x_yyyy.user");
+var n = current.isNewRecord();
+
+//初期化
+var wl_u = false;
+var wl_m = false;
+
+//watchlistが空じゃない時だけ実行。空の場合は動作は不定
+if(!current.parent_incident.watch_list.nil()){
+   wl_u = (current.parent_incident.watch_list.indexOf(u) != -1) ;
+	
+  //メールアドレスが空じゃないときだけ実行。空の場合は動作は不定	
+   if(m != ""){
+     wl_m = (current.parent_incident.watch_list.indexOf(m) != -1);	
+   }
+}
+
+//最後に全部の要素で判定。
+if(wl_u || wl_m || g || r || n){
+	answer = true;
+} else{
+    answer = false;	
+}

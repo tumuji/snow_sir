@@ -1,0 +1,11 @@
+//一般ユーザーについては、新規のときだけ、Tier2については、新規及び親インシデントの担当グループである場合だけ、Tier1はいつでもtrueとする。
+var g = gs.getUser().isMemberOf(current.parent_incident.assignment_group.toString());
+var r = gs.hasRole("x_yyyy.admin, x_yyyy.user");
+var n = current.isNewRecord();
+
+//最後に全部の要素で判定。
+if(g || r || n){
+	answer = true;
+} else{
+    answer = false;	
+}
