@@ -1,4 +1,1 @@
-//一般ユーザーについては、watch_listに入っている場合にのみ書き込み権限を与える。
-var u = gs.getUserID(); //sets u to ID of current user
-var m = gs.getUser().getEmail();
-answer = (current.watch_list.indexOf(u) != -1) || (current.watch_list.indexOf(m) != -1) ;
+//不要のため削除

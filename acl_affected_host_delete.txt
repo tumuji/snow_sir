@@ -1,10 +1,15 @@
 //Tier2については、親インシデントの担当グループである場合だけ、Tier1はいつでもtrueとする。
-var g = gs.getUser().isMemberOf(current.parent_incident.assignment_group.toString());
-var r = gs.hasRole("x_yyyy.admin, x_yyyy.user");
 
-//最後に全部の要素で判定。
-if(g || r){
+//アクセス許可の判定用フラグを全てfalseで初期化しておく。
+var group_flag = false;
+var role_flag = false;
+
+group_flag = gs.getUser().isMemberOf(current.parent_incident.assignment_group.toString());
+role_flag = gs.hasRole("x_661859_ir_test.admin, x_661859_ir_test.user");
+
+//最後に全部のフラグで判定。一つでもtrueならanswerをtrueにする。
+if(group_flag || role_flag){
 	answer = true;
 } else{
-    answer = false;	
+    answer = false;
 }

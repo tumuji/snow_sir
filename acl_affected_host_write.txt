@@ -1,11 +1,18 @@
 //一般ユーザーについては、新規のときだけ、Tier2については、新規及び親インシデントの担当グループである場合だけ、Tier1はいつでもtrueとする。
-var g = gs.getUser().isMemberOf(current.parent_incident.assignment_group.toString());
-var r = gs.hasRole("x_yyyy.admin, x_yyyy.user");
-var n = current.isNewRecord();
 
-//最後に全部の要素で判定。
-if(g || r || n){
+//アクセス許可の判定用フラグを全てfalseで初期化しておく。
+var group_flag = false;
+var role_flag = false;
+var new_record_flag = false;
+
+//フラグを設定
+group_flag = gs.getUser().isMemberOf(current.parent_incident.assignment_group.toString());
+role_flag = gs.hasRole("x_ir_test.admin, x_ir_test.user");
+new_record_flag = current.isNewRecord();
+
+//最後に全部のフラグで判定。一つでもtrueならanswerをtrueにする。
+if(group_flag || role_flag || new_record_flag){
 	answer = true;
 } else{
-    answer = false;	
+    answer = false;
 }

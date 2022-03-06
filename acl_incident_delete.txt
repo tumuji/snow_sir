@@ -1,10 +1,13 @@
-//Tier2については、インシデントの担当グループである場合だけ、Tier1はいつでもtrueとする。
-var g = gs.getUser().isMemberOf(current.assignment_group.toString());
-var r = gs.hasRole("x_yyyy.admin, x_yyyy.user");
+var group_flag = false;
+var role_flag = false;
+
+//フラグを設定
+group_flag = gs.getUser().isMemberOf(current.assignment_group.toString()); //担当グループか
+role_flag = gs.hasRole("x_ir_test.admin, x_ir_test.user"); //CSIRTか
 
 //最後に全部の要素で判定。
-if(g || r){
+if(group_flag || role_flag){
 	answer = true;
 } else{
-    answer = false;	
+    answer = false;
 }

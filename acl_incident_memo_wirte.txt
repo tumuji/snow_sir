@@ -1,13 +1,52 @@
-//一般ユーザーについては新規作成、Tier2については、新規作成及びインシデントの担当グループである場合だけ、Tier1はいつでもtrueとする。
-//これは既存レコードについては、一般ユーザーについては閲覧可能なmemoフィールドだけに書き込み権を与えるACLと組み合わせて設定する。
+//アクセス許可の判定用フラグを全てfalseで初期化しておく。
+var group_flag = false;
+var role_flag = false;
+var new_record_flag = false;
+var dept_flag = false;
+var wlist_id_flag = false;
+var wlist_email_flag = false;
+var caller_flag = false;
 
-var g = gs.getUser().isMemberOf(current.assignment_group.toString());
-var r = gs.hasRole("x_661859_ir_test.admin, x_661859_ir_test.user");
-var n = current.isNewRecord();
+//ログインユーザーのIDとメールアドレスを取得
+var user_id = gs.getUserID(); //sets u to ID of current user
+var user_email = gs.getUser().getEmail();
 
-//最後に全部の要素で判定。
-if(g || r || n){
+//ログインユーザーの部署名を取得
+var gr= new GlideRecord('sys_user');
+gr.get(user_id);
+var dept_id = gr.department;
+var dept_name = dept_id.name;
+
+//フラグを設定
+group_flag = gs.getUser().isMemberOf(current.assignment_group.toString()); //担当グループか
+role_flag = gs.hasRole("x_661859_ir_test.admin, x_661859_ir_test.user"); //CSIRTか
+new_record_flag = current.isNewRecord(); //新規作成レコードか
+
+//s担当ロールがある時だけ、影響部署がユーザーの部署と同じかをチェックしてフラグを立てる。
+//一般ユーザーが自部署のレコードを全部見られてはまずいので。
+if (gs.hasRole("ir_test_sm")) {
+    if (current.affected_dept == dept_name) {
+        dept_flag = true;
+    }
+}
+//watchlistにIDかメールアドレスが登録されているか。
+//watchlistが空じゃない時だけ実行。からの場合は動作は不定
+if(!current.watch_list.nil()){
+   wlist_id_flag = (current.watch_list.indexOf(user_id) != -1) ;
+
+  //メールアドレスが空じゃないときだけ実行。空の場合は動作は不定
+   if(user_email != ""){
+     wlist_email_flag = (current.watch_list.indexOf(user_email) != -1);
+   }
+}
+
+if (current.caller == user_id){
+	caller_flag = true;
+}
+
+//最後に全部のフラグで判定。一つでもtrueならanswerをtrueにする。
+if(group_flag || role_flag || new_record_flag || dept_flag || wlist_id_flag || wlist_email_flag || caller_flag){
 	answer = true;
 } else{
-    answer = false;	
+    answer = false;
 }

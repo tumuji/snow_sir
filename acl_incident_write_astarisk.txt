@@ -1,13 +1,19 @@
 //一般ユーザーについては新規作成、Tier2については、新規作成及びインシデントの担当グループである場合だけ、Tier1はいつでもtrueとする。
 //noneでオール許可にしたあとに、こちらを*ルールで使う。
 
-var g = gs.getUser().isMemberOf(current.assignment_group.toString());
-var r = gs.hasRole("x_yyyy.admin, x_yyyy.user");
-var n = current.isNewRecord();
+//アクセス許可の判定用フラグを全てfalseで初期化しておく。
+var group_flag = false;
+var role_flag = false;
+var new_record_flag = false;
 
-//最後に全部の要素で判定。
-if(g || r || n){
+//フラグを設定
+group_flag = gs.getUser().isMemberOf(current.assignment_group.toString()); //担当グループか
+role_flag = gs.hasRole("x_ir_test.admin, x_ir_test.user"); //CSIRTか
+new_record_flag = current.isNewRecord(); //新規作成レコードか
+
+//最後に全部のフラグで判定。一つでもtrueならanswerをtrueにする。
+if(group_flag || role_flag || new_record_flag){
 	answer = true;
 } else{
-    answer = false;	
+    answer = false;
 }
