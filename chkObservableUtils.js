@@ -10,6 +10,7 @@ chkObservableUtils.prototype = Object.extendsObject(global.AbstractAjaxProcessor
 
         //デフォルト値をホワイトリスト該当「無し」にする。
         var grDF = new GlideRecord('x_yyyy_observable');
+        grDF.addQuery('parent_incident', inc_id);
         grDF.query();
 
         while (grDF.next()) {
